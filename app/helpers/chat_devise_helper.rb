@@ -1,0 +1,2 @@
+module ChatDeviseHelper
+end

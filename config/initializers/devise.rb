@@ -1,5 +1,18 @@
 # frozen_string_literal: true
 
+class TurboFailureApp < Devise::FailureApp
+  def respond
+    if request_format == :turbo_stream
+      redirect
+    else
+      super
+    end
+  end
+
+  def skip_format?
+    %w[html turbo_stream */*].include? request_format.to_s
+  end
+end
 # Assuming you have not yet modified this file, each configuration option below
 # is set to its default value. Note that some are commented out while others
 # are not: uncommented lines are intended to protect your configuration from
@@ -18,6 +31,24 @@ Devise.setup do |config|
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
+  config.parent_controller = 'TurboDeviseController'
+
+  # ...
+
+  # ==> Navigation configuration
+  # ...
+  config.navigational_formats = ['*/*', :html, :turbo_stream]
+
+  # ...
+
+  # ==> Warden configuration
+  # ...
+  config.warden do |manager|
+    manager.failure_app = TurboFailureApp
+    #   manager.intercept_401 = false
+    #   manager.default_strategies(scope: :user).unshift :some_external_strategy
+  end
+
   # config.parent_controller = 'DeviseController'
 
   # ==> Mailer Configuration
@@ -296,11 +327,11 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  # ==> Turbolinks configuration
-  # If your app is using Turbolinks, Turbolinks::Controller needs to be included to make redirection work correctly:
+  # ==> chatlinks configuration
+  # If your app is using chatlinks, chatlinks::Controller needs to be included to make redirection work correctly:
   #
   # ActiveSupport.on_load(:devise_failure_app) do
-  #   include Turbolinks::Controller
+  #   include chatlinks::Controller
   # end
 
   # ==> Configuration for :registerable

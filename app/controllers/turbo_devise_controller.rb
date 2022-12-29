@@ -1,6 +1,6 @@
-class ChatDeviseController < ApplicationController
+class TurboDeviseController < ApplicationController
   class Responder < ActionController::Responder
-    def to_chat_stream
+    def to_turbo_stream
       controller.render(options.merge(formats: :html))
     rescue ActionView::MissingTemplate => e
       if get?
@@ -14,5 +14,5 @@ class ChatDeviseController < ApplicationController
   end
 
   self.responder = Responder
-  respond_to :html, :chat_stream
+  respond_to :html, :turbo_stream
 end
